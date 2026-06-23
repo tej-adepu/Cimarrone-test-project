@@ -1,5 +1,3 @@
-
-
 import { useState } from "react";
 import Navbar from "./Employee/Navbar";
 import LeaveBalance from "./Employee/LeaveBalance";
@@ -86,12 +84,16 @@ function App() {
   };
 
   return (
+    <div className="min-h-screen bg-gray-50">
+      <Navbar employee={employee} />
 
-    <>
-      
-      
-    </>
-  )
+      <main className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+        <LeaveBalance balance={balance} />
+        <LeaveHistory leaves={leaves} />
+        <ApplyLeaveForm managers={managers} onSubmit={handleApplyLeave} />
+      </main>
+    </div>
+  );
 
 }
 
