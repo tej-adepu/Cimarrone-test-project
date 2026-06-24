@@ -12,11 +12,12 @@ public interface EmployeeService {
     List<EmployeeResponseDTO> getAllEmployees();
 
     EmployeeResponseDTO createEmployee(
-            EmployeeRequestDTO request
+            EmployeeRequestDTO request,Long managerId
     );
 
     EmployeeResponseDTO updateEmployee(
             Long id,
             EmployeeRequestDTO request
     );
+
 }

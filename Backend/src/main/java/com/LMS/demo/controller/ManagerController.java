@@ -3,26 +3,34 @@ package com.LMS.demo.controller;
 import com.LMS.demo.dto.EmployeeRequestDTO;
 import com.LMS.demo.dto.EmployeeResponseDTO;
 import com.LMS.demo.dto.LeaveResponseDTO;
+import com.LMS.demo.security.CustomUserPrincipal;
 import com.LMS.demo.service.EmployeeService;
 import com.LMS.demo.service.LeaveService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/manager")
+@RequestMapping("/api/manager")
 @RequiredArgsConstructor
 public class ManagerController {
 
     private final EmployeeService employeeService;
     private final LeaveService leaveService;
 
+    
     @GetMapping("/profile")
     public EmployeeResponseDTO getProfile(
-            @RequestParam Long managerId
+            @AuthenticationPrincipal
+            CustomUserPrincipal user
     ) {
-        return employeeService.getProfile(managerId);
+
+        return employeeService.getProfile(
+                user.getUserId()
+        );
     }
 
     @GetMapping("/employees")
@@ -39,9 +47,17 @@ public class ManagerController {
 
     @PostMapping("/employees")
     public EmployeeResponseDTO createEmployee(
-            @RequestBody EmployeeRequestDTO request
+            @AuthenticationPrincipal
+            CustomUserPrincipal user,
+
+            @RequestBody
+            EmployeeRequestDTO request
     ) {
-        return employeeService.createEmployee(request);
+
+        return employeeService.createEmployee(
+                request,
+                user.getUserId()
+        );
     }
 
     @PutMapping("/employees/{id}")

@@ -8,6 +8,8 @@ import com.LMS.demo.exception.ResourceNotFoundException;
 import com.LMS.demo.repository.EmployeeRepository;
 import com.LMS.demo.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +17,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
-
     private final EmployeeRepository employeeRepository;
-
+    private final PasswordEncoder passwordEncoder;
+    
     @Override
     public EmployeeResponseDTO getProfile(Long id) {
 
@@ -42,32 +44,42 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeResponseDTO createEmployee(
-            EmployeeRequestDTO request
-    ) {
+public EmployeeResponseDTO createEmployee(
+        EmployeeRequestDTO request,
+        Long managerId
+) {
 
-        if (employeeRepository.existsByEmail(request.getEmail())) {
-            throw new EmailAlreadyExistsException(
-                    "Email already exists"
-            );
-        }
+    if (employeeRepository.existsByEmail(
+            request.getEmail()
+    )) {
 
-        Employee employee = Employee.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(request.getPassword())
-                .department(request.getDepartment())
-                .salary(request.getSalary())
-                .role(request.getRole())
-                .managerId(request.getManagerId())
-                .build();
-
-        Employee savedEmployee =
-                employeeRepository.save(employee);
-
-        return mapToDTO(savedEmployee);
+        throw new EmailAlreadyExistsException(
+                "Email already exists"
+        );
     }
 
+    Employee employee = Employee.builder()
+            .name(request.getName())
+            .email(request.getEmail())
+            .password(
+                    passwordEncoder.encode(
+                            request.getPassword()
+                    )
+            )
+            .department(request.getDepartment())
+            .salary(request.getSalary())
+            .role(request.getRole())
+
+            // manager id from JWT
+            .managerId(managerId)
+
+            .build();
+
+    Employee savedEmployee =
+            employeeRepository.save(employee);
+
+    return mapToDTO(savedEmployee);
+}
     @Override
     public EmployeeResponseDTO updateEmployee(
             Long id,

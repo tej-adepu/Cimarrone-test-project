@@ -15,7 +15,11 @@ public class LoginResponseDTO {
 
     private String email;
 
+    private String department;
+
     private String role;
+
+    private Long managerId;
 
     private String token;
 }
