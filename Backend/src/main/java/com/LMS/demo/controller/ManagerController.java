@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import com.LMS.demo.security.CustomUserPrincipal;
+import org.springframework.security.core.Authentication;
+
 import java.util.List;
 
 @RestController
@@ -34,8 +37,17 @@ public class ManagerController {
     }
 
     @GetMapping("/employees")
-    public List<EmployeeResponseDTO> getEmployees() {
-        return employeeService.getAllEmployees();
+    public List<EmployeeResponseDTO> getEmployees(
+            Authentication authentication
+    ) {
+
+        CustomUserPrincipal principal =
+                (CustomUserPrincipal)
+                        authentication.getPrincipal();
+
+        return employeeService.getEmployeesByManager(
+                principal.getUserId()
+        );
     }
 
     @GetMapping("/employees/{id}/leaves")

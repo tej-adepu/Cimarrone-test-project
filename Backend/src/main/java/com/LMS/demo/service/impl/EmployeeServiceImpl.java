@@ -34,10 +34,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeResponseDTO> getAllEmployees() {
+    public List<EmployeeResponseDTO> getEmployeesByManager(
+            Long managerId
+    ) {
 
         return employeeRepository
-                .findAll()
+                .findByManagerId(managerId)
                 .stream()
                 .map(this::mapToDTO)
                 .toList();

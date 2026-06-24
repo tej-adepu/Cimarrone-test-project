@@ -1,14 +1,26 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Login from "./Pages/Login";
 import ManagerDashboard from "./Manager/ManagerDashboard";
-import EmployeeDashboard from "./Employee/components//EmployeeDashboard";
+import EmployeeDashboard from "./Employee/components/EmployeeDashboard";
 
 function App() {
   return (
-    <>
-      <Login />
-      <ManagerDashboard />
-      <EmployeeDashboard />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+
+        <Route
+          path="/manager/dashboard"
+          element={<ManagerDashboard />}
+        />
+
+        <Route
+          path="/employee/dashboard"
+          element={<EmployeeDashboard />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

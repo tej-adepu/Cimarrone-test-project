@@ -9,7 +9,9 @@ public interface EmployeeService {
 
     EmployeeResponseDTO getProfile(Long id);
 
-    List<EmployeeResponseDTO> getAllEmployees();
+    List<EmployeeResponseDTO> getEmployeesByManager(
+            Long managerId
+    );
 
     EmployeeResponseDTO createEmployee(
             EmployeeRequestDTO request,Long managerId

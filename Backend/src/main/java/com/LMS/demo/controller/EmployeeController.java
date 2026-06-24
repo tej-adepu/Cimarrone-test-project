@@ -59,6 +59,10 @@ public class EmployeeController {
             System.out.println("AUTHORITIES = " + user.getAuthorities());
         }
 
+        if(user == null){
+            throw new RuntimeException("Unauthorized");
+        }
+
         return leaveService.applyLeave(
                 user.getUserId(),
                 request
