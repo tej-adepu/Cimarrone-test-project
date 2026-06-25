@@ -71,14 +71,13 @@ public class ManagerController {
         return employeeService.updateEmployee(id, request);
     }
     @PutMapping("/leaves/{id}")
-    public LeaveResponseDTO updateLeaveStatus(
-            @PathVariable Long id,
-            @RequestBody LeaveStatusUpdateDTO request
-    ){
-
+        public LeaveResponseDTO updateLeaveStatus(
+                @PathVariable Long id,
+                @RequestBody LeaveStatusUpdateDTO request
+        ) {
         return leaveService.updateLeaveStatus(
                 id,
                 request.getStatus()
         );
-    }
+        }
 }
