@@ -12,7 +12,7 @@ const getHeaders = () => ({
 export const getProfile = async () => {
 
   const response = await fetch(
-    `${BASE_URL}/api/manager/profile`,
+    `${BASE_URL}/api/profile`,
     {
       headers: getHeaders(),
     }

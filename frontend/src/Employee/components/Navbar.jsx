@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ employee }) => {
 
@@ -7,6 +8,13 @@ const Navbar = ({ employee }) => {
 
   const dropdownRef =
     useRef(null);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear(); // clears JWT and user data
+    navigate("/");
+  };
 
   useEffect(() => {
 
@@ -169,6 +177,13 @@ const Navbar = ({ employee }) => {
                   {employee.managerName}
                 </span>
               </div>
+
+              <button
+                  onClick={handleLogout}
+                  className="w-full mt-3 bg-red-500 text-white py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition"
+              >
+                Logout
+              </button>
 
             </div>
 

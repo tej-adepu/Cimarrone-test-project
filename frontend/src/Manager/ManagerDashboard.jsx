@@ -1,6 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
+  getProfile,
   getEmployees,
   getEmployeeLeaves,
   createEmployee,
@@ -19,15 +21,52 @@ export default function ManagerDashboard() {
   const [pendingLeaves, setPendingLeaves] = useState([]);
   const [loading,       setLoading]       = useState(true);
   const [error,         setError]         = useState(null);
+  const [manager, setManager] = useState(null);
+  const [openProfile, setOpenProfile] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear(); // or removeItem("token") if storing only JWT
+    navigate("/");
+  };
 
   useEffect(() => {
     loadDashboard();
   }, []);
 
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target)
+      ) {
+        setOpenProfile(false);
+      }
+    };
+
+    document.addEventListener(
+        "mousedown",
+        handleClickOutside
+    );
+
+    return () =>
+        document.removeEventListener(
+            "mousedown",
+            handleClickOutside
+        );
+  }, []);
+
   const loadDashboard = async () => {
     setLoading(true);
     setError(null);
+
     try {
+      const profile = await getProfile();
+      setManager(profile);
+
       const emps = await getEmployees();
       setEmployees(emps);
 
@@ -37,14 +76,21 @@ export default function ManagerDashboard() {
                   .then((leaves) =>
                       leaves
                           .filter((l) => l.status === "PENDING")
-                          .map((l) => ({ ...l, employee: e }))
+                          .map((l) => ({
+                            ...l,
+                            employee: e,
+                          }))
                   )
                   .catch(() => [])
           )
       );
+
       setPendingLeaves(leaveArrays.flat());
     } catch (err) {
-      setError(err.message || "Failed to load dashboard data");
+      setError(
+          err.message ||
+          "Failed to load dashboard data"
+      );
     } finally {
       setLoading(false);
     }
@@ -76,6 +122,13 @@ export default function ManagerDashboard() {
     }
   }, []);
 
+  const initials = manager?.name
+      ?.split(" ")
+      .map((word) => word[0])
+      .join("")
+      .toUpperCase();
+
+
   if (loading) {
     return (
         <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -106,6 +159,7 @@ export default function ManagerDashboard() {
     );
   }
 
+
   return (
       <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
 
@@ -126,21 +180,99 @@ export default function ManagerDashboard() {
 
             {/* Manager profile */}
             <div className="flex items-center gap-3">
-            <span className="text-xs text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">
-              Tue, 23 Jun 2026
-            </span>
-              <div className="flex items-center gap-2 pl-3 border-l border-slate-200">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-violet-600
-                flex items-center justify-center text-white text-xs font-semibold">
-                  MG
-                </div>
-                <div className="hidden sm:block">
-                  <p className="text-xs font-medium text-slate-700 leading-none">Meghna Gupta</p>
-                  <p className="text-[11px] text-slate-400 leading-none mt-0.5">Manager</p>
-                </div>
+              <div
+                  className="relative"
+                  ref={dropdownRef}
+              >
+                <button
+                    onClick={() =>
+                        setOpenProfile(!openProfile)
+                    }
+                    className="flex items-center gap-3"
+                >
+                  <div className="hidden sm:block text-right">
+                    <p className="text-sm font-medium text-gray-800">
+                      {manager?.name}
+                    </p>
+
+                    <p className="text-xs text-gray-500">
+                      {manager?.role}
+                    </p>
+                  </div>
+
+                  <div className="w-9 h-9 rounded-full bg-violet-100 flex items-center justify-center text-violet-700 font-semibold">
+                    {initials}
+                  </div>
+                </button>
+
+                {openProfile && (
+                    <div className="absolute right-0 mt-3 w-72 bg-white border border-gray-200 rounded-xl shadow-lg p-4 z-50">
+
+                      <div className="flex items-center gap-3 mb-3">
+
+                        <div className="w-11 h-11 rounded-full bg-violet-600 text-white flex items-center justify-center font-bold">
+                          {initials}
+                        </div>
+
+                        <div>
+                          <p className="text-sm font-semibold">
+                            {manager?.name}
+                          </p>
+
+                          <p className="text-xs text-gray-500">
+                            {manager?.role}
+                          </p>
+                        </div>
+
+                      </div>
+
+                      <div className="border-t pt-3 space-y-2">
+
+                        <div className="flex justify-between text-xs">
+          <span className="text-gray-400">
+            Manager ID
+          </span>
+
+                          <span className="font-medium">
+            {manager?.managerId}
+          </span>
+                        </div>
+
+                        <div className="flex justify-between text-xs">
+          <span className="text-gray-400">
+            Email
+          </span>
+
+                          <span className="font-medium truncate ml-4">
+            {manager?.email}
+          </span>
+                        </div>
+
+                        <div className="flex justify-between text-xs">
+          <span className="text-gray-400">
+            Role
+          </span>
+
+                          <span className="font-medium">
+            {manager?.role}
+          </span>
+                        </div>
+
+                        <button
+                            onClick={handleLogout}
+                            className="w-full mt-3 bg-red-500 text-white py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition"
+                        >
+                          Logout
+                        </button>
+
+                      </div>
+
+                    </div>
+                )}
               </div>
             </div>
           </div>
+
         </header>
 
         {/* ── Tab bar ── */}
