@@ -145,6 +145,8 @@ public class LeaveServiceImpl implements LeaveService {
         return mapToDTO(updatedLeave);
     }
 
+    
+
     @Override
     public List<LeaveResponseDTO> getEmployeeLeaves(
             Long employeeId
@@ -232,6 +234,9 @@ public class LeaveServiceImpl implements LeaveService {
                                 leave.getEndDate()
                         )
                 )
+                .employeeId(leave.getEmployee().getId())
+                .employeeName(leave.getEmployee().getName())
+                .department(leave.getEmployee().getDepartment())
                 .build();
     }
 }

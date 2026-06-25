@@ -23,4 +23,10 @@ public class LeaveResponseDTO {
     private LeaveStatus status;
 
     private long days;
+
+    private Long employeeId;
+
+    private String employeeName;
+
+    private String department;
 }
