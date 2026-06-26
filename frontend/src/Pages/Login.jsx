@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BASE_URL, { getVariables } from "../api/api";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -12,7 +13,7 @@ export default function Login() {
     setLoading(true);
 
     const response = await fetch(
-      "http://localhost:8080/api/auth/login",
+      `${BASE_URL}/api/auth/login`,
       {
         method: "POST",
         headers: {

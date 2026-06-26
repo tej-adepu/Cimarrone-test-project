@@ -1,4 +1,4 @@
-import BASE_URL, { getHeaders } from "./api";
+import BASE_URL, { getVariables } from "./api";
 
 const getHeaders = () => ({
   "Content-Type": "application/json",
