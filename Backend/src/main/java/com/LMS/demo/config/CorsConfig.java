@@ -7,7 +7,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List; 
+import java.util.List;
 
 @Configuration
 public class CorsConfig {
@@ -21,11 +21,7 @@ public class CorsConfig {
         CorsConfiguration configuration =
                 new CorsConfiguration();
 
-        configuration.setAllowedOrigins(
-                List.of(
-                        "${frontend.url}"
-                )
-        );
+        
 
         configuration.setAllowedMethods(
                 List.of(
