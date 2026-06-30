@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BASE_URL, { getVariables } from "../api/api";
+import BASE_URL from "../api/api";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -128,10 +128,6 @@ export default function Login() {
             </button>
           </form>
 
-          <p style={s.foot}>
-            Don't have an account?{" "}
-            <span style={{ color: "#2563eb", fontWeight: 600, cursor: "pointer" }}>Request access</span>
-          </p>
         </div>
       </div>
     </>

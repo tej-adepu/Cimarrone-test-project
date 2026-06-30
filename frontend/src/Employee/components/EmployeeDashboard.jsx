@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Navbar from "./Navbar";
-import LeaveHistory from "./LeaveHistory";
+import LeaveHistory from "./Leavehistory";
 import ApplyLeaveForm from "./ApplyLeaveForm";
 import LeaveBalance from "./LeaveBalance";
 
@@ -74,8 +74,9 @@ function EmployeeDashboard() {
         />
 
         <LeaveHistory
-            leaves={leaves}
-        />
+          leaves={leaves}
+          refreshLeaves={loadDashboard}
+      />
 
         <ApplyLeaveForm
           onSuccess={loadDashboard}

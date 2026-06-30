@@ -1,4 +1,4 @@
-import BASE_URL, { getVariables } from "./api";
+import BASE_URL from "./api";
 
 
 const getHeaders = () => ({

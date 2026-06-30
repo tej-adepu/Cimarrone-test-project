@@ -1,4 +1,4 @@
-import BASE_URL, { getVariables } from "./api";
+import BASE_URL from "./api";
 
 const getHeaders = () => ({
   "Content-Type": "application/json",
@@ -20,7 +20,21 @@ export const getProfile = async () => {
 
   return await response.json();
 };
+export const cancelLeave = async (leaveId) => {
+  const response = await fetch(
+    `${BASE_URL}/api/employee/leave/cancel/${leaveId}`,
+    {
+      method: "PUT", // Change to "POST" if your backend uses POST
+      headers: getHeaders(),
+    }
+  );
 
+  if (!response.ok) {
+    throw new Error("Failed to cancel leave");
+  }
+
+  return response.json();
+};
 export const getLeaveHistory = async () => {
 
   const response = await fetch(
